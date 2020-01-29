@@ -37,12 +37,12 @@ def image_dir(direc):
         
     return img_p
         
-picasso    = image_dir(direc='C:/Users/PRATHAMESH/Desktop/best-artworks-of-all-time/images/images/Pablo_Picasso/')
+picasso    = image_dir(direc='Pablo_Picasso/')
 picasso_cut= picasso[:262]
 
-rembrant   = image_dir(direc='C:/Users/PRATHAMESH/Desktop/best-artworks-of-all-time/images/images/Rembrandt/')
+rembrant   = image_dir(direc='Rembrandt/')
 
-dali       = image_dir(direc='C:/Users/PRATHAMESH/Desktop/best-artworks-of-all-time/images/images/Salvador_Dali/')
+dali       = image_dir(direc='Salvador_Dali/')
         
 final_array=picasso_cut+rembrant+dali
 picasso_out=[0]
