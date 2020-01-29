@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 from PIL import Image
 from os import listdir
 from os.path import isfile, join
@@ -8,10 +5,6 @@ import numpy
 import matplotlib.pyplot as plt
 from tensorflow import keras
 from sklearn.model_selection import train_test_split
-
-picasso    = image_dir(direc='Pablo_Picasso/')
-rembrant   = image_dir(direc='Rembrandt/')
-dali       = image_dir(direc='Salvador_Dali/')
 
 def resize(img):
     new_width  = 200
@@ -34,19 +27,22 @@ def image_dir(direc):
         try:
             img_p.append(img_t[j].reshape(200,200,3))
         except:
-            pass   
+            pass
+        
     return img_p
         
-    
+picasso    = image_dir(direc='C:/Users/PRATHAMESH/Desktop/best-artworks-of-all-time/images/images/Pablo_Picasso/')
 
+rembrant   = image_dir(direc='C:/Users/PRATHAMESH/Desktop/best-artworks-of-all-time/images/images/Rembrandt/')
 
-        
+dali       = image_dir(direc='C:/Users/PRATHAMESH/Desktop/best-artworks-of-all-time/images/images/Salvador_Dali/')
+
 final_array=picasso+rembrant+dali
 picasso_out=[0]
 picasso_out=picasso_out*len(picasso)
 rembrant_out=[1]
 rembrant_out=rembrant_out*len(rembrant)
-dali_out=[2]
+dali_out=[3]
 dali_out=dali_out*len(dali)
 
 Y=picasso_out+rembrant_out+dali_out
@@ -63,9 +59,10 @@ X_test = normalize(X_test)
 
 model = keras.Sequential([
     keras.layers.Flatten(input_shape=(200,200,3)),
-    keras.layers.Dense(256, activation='relu'),
-#     keras.layers.Flatten(input_shape=(200,200,3)),
-#     keras.layers.Dense(128, activation='relu'),
+    keras.layers.Dense(128, activation='relu'),
+    keras.layers.Flatten(input_shape=(200,200,3)),
+    keras.layers.Dense(32, activation='relu'),
+    keras.layers.Flatten(input_shape=(200,200,3)),
     keras.layers.Dense(20, activation='softmax')
 ])
 
@@ -76,10 +73,11 @@ metrics=['accuracy'])
 model.fit(numpy.asarray(X_train),numpy.array(Y_train), epochs=5)
 test_loss, test_acc=model.evaluate(numpy.asarray(X_test), numpy.asarray(Y_test))
 prediction=model.predict(numpy.asarray(X_test), max_queue_size=200)
-i=list(prediction)
+out=list(prediction)
+
 out_list=[]
 for i in out:
-    out_list.append(int(i))
+    out_list.append(numpy.argmax(i))
 Y_test_names=[]
 for i in Y_test:
     if i==0:
@@ -88,13 +86,20 @@ for i in Y_test:
         Y_test_names.append('Rembrant')
     elif i==2:
         Y_test_names.append('Dali')
-    
+out_names=[]
+for i in out_list:
+    if i==0:
+        out_names.append('Picasso')
+    elif i==1:
+        out_names.append('Rembrant')
+    elif i==2:
+        out_names.append('Dali')
+        
 for i in range(50):
     plt.grid(False)
     plt.imshow(X_test[i])
     plt.xlabel('Actual '+str(Y_test_names[i]))
-    plt.ylabel('Prediction '+str(numpy.argmax(out[i])))
+    plt.ylabel('Prediction '+str(out_names[i]))
     plt.show()
-    if Y_test[i]!=out[i]:
+    if Y_test_names[i]!=out_names[i]:
         plt.show()
-
