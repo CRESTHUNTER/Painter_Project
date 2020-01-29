@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
-
-
 from PIL import Image
 from os import listdir
 from os.path import isfile, join
@@ -11,6 +8,10 @@ import numpy
 import matplotlib.pyplot as plt
 from tensorflow import keras
 from sklearn.model_selection import train_test_split
+
+picasso    = image_dir(direc='Pablo_Picasso/')
+rembrant   = image_dir(direc='Rembrandt/')
+dali       = image_dir(direc='Salvador_Dali/')
 
 def resize(img):
     new_width  = 200
@@ -33,23 +34,19 @@ def image_dir(direc):
         try:
             img_p.append(img_t[j].reshape(200,200,3))
         except:
-            pass
-        
+            pass   
     return img_p
         
-picasso    = image_dir(direc='Pablo_Picasso/')
-picasso_cut= picasso[:262]
+    
 
-rembrant   = image_dir(direc='Rembrandt/')
 
-dali       = image_dir(direc='Salvador_Dali/')
         
-final_array=picasso_cut+rembrant+dali
+final_array=picasso+rembrant+dali
 picasso_out=[0]
-picasso_out=picasso_out*len(picasso_cut)
+picasso_out=picasso_out*len(picasso)
 rembrant_out=[1]
 rembrant_out=rembrant_out*len(rembrant)
-dali_out=[3]
+dali_out=[2]
 dali_out=dali_out*len(dali)
 
 Y=picasso_out+rembrant_out+dali_out
@@ -83,11 +80,19 @@ i=list(prediction)
 out_list=[]
 for i in out:
     out_list.append(int(i))
+Y_test_names=[]
+for i in Y_test:
+    if i==0:
+        Y_test_names.append('Picasso')
+    elif i==1:
+        Y_test_names.append('Rembrant')
+    elif i==2:
+        Y_test_names.append('Dali')
     
 for i in range(50):
     plt.grid(False)
     plt.imshow(X_test[i])
-    plt.xlabel('Actual '+str(Y_test[i]))
+    plt.xlabel('Actual '+str(Y_test_names[i]))
     plt.ylabel('Prediction '+str(numpy.argmax(out[i])))
     plt.show()
     if Y_test[i]!=out[i]:
